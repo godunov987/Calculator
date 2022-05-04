@@ -1,16 +1,18 @@
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        System.out.println(calc("1 + 8"));
-        System.out.println(calc("VI / III"));
-        System.out.println(calc("VI * IX"));
-        System.out.println(calc("I - II"));
-        System.out.println(calc("I + 1"));
-        System.out.println(calc("1 + 2 + 3"));
+        Scanner in = new Scanner(System.in);
+        String str = new String();
+        while (true) {
+            str = in.nextLine();
+            System.out.println(calc(str));
+        }
     }
 
-    static int[] intervals={0, 1, 4, 5, 9, 10, 40, 50, 90, 100};
-    static String[] numerals={"", "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C"};
+    static int[] intervals = {0, 1, 4, 5, 9, 10, 40, 50, 90, 100};
+    static String[] numerals = {"", "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C"};
 
     public static String calc(String input) throws Exception {
         boolean roman = false;
@@ -18,7 +20,7 @@ public class Main {
         int response = 0;
 
         if (arr.length != 3) {
-        throw new Exception();
+            throw new Exception();
         }
 
         int a;
@@ -51,21 +53,23 @@ public class Main {
             default:
                 new Exception();
         }
-        if (roman){
+        if (roman) {
             return toRoman(response);
-        }else {
+        } else {
             return String.valueOf(response);
         }
     }
+
     static boolean checkRom(String str) {
         String[] arr = new String[]{"I", "V", "X"};
         for (int i = 0; i < arr.length; i++) {
-            if (str.contains(arr[i])){
+            if (str.contains(arr[i])) {
                 return true;
             }
         }
         return false;
     }
+
     static int checkNum(int num) throws Exception {
         if (num >= -10 && num <= 10) {
             return num;
@@ -76,18 +80,18 @@ public class Main {
     }
 
     static int findFloor(final int number, final int firstIndex, final int lastIndex) {
-        if(firstIndex==lastIndex)
+        if (firstIndex == lastIndex)
             return firstIndex;
-        if(intervals[firstIndex]==number)
+        if (intervals[firstIndex] == number)
             return firstIndex;
-        if(intervals[lastIndex]==number)
+        if (intervals[lastIndex] == number)
             return lastIndex;
-        final int median=(lastIndex+firstIndex)/2;
-        if(median==firstIndex)
+        final int median = (lastIndex + firstIndex) / 2;
+        if (median == firstIndex)
             return firstIndex;
-        if(number == intervals[median])
+        if (number == intervals[median])
             return median;
-        if(number > intervals[median])
+        if (number > intervals[median])
             return findFloor(number, median, lastIndex);
         else
             return findFloor(number, firstIndex, median);
@@ -95,15 +99,15 @@ public class Main {
     }
 
     static String toRoman(final int number) {
-        int floorIndex=findFloor(number, 0, intervals.length-1);
-        if(number==intervals[floorIndex])
+        int floorIndex = findFloor(number, 0, intervals.length - 1);
+        if (number == intervals[floorIndex])
             return numerals[floorIndex];
-        return numerals[floorIndex]+toRoman(number-intervals[floorIndex]);
+        return numerals[floorIndex] + toRoman(number - intervals[floorIndex]);
     }
 
     static int toArabic(String roman) {
         int result = 0;
-        for (int i = intervals.length-1; i >= 0; i-- ) {
+        for (int i = intervals.length - 1; i >= 0; i--) {
             while (roman.indexOf(numerals[i]) == 0 && numerals[i].length() > 0) {
                 result += intervals[i];
                 roman = roman.substring(numerals[i].length());
