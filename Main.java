@@ -1,118 +1,116 @@
+package com.company;
+
 import java.util.Scanner;
 
-public class Main {
+import static java.lang.Integer.parseInt;
 
+public class FirstClass {
     public static void main(String[] args) throws Exception {
         Scanner in = new Scanner(System.in);
-        String str = new String();
+        String str;
         while (true) {
             str = in.nextLine();
             System.out.println(calc(str));
         }
+
+
     }
 
-    static int[] intervals = {0, 1, 4, 5, 9, 10, 40, 50, 90, 100};
-    static String[] numerals = {"", "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C"};
 
     public static String calc(String input) throws Exception {
-        boolean roman = false;
+
         String[] arr = input.split(" ");
-        int response = 0;
+        checkStr(arr[0]);
+        checkStr(arr[2]);
 
-        if (arr.length != 3) {
-            throw new Exception();
-        }
+        String response = null;
+        if (arr[2].contains("\"")) {
+            switch (arr[1]) {
+                case "+":
+                    arr[0] = arr[0].replace("\"", "");
+                    arr[2] = arr[2].replace("\"", "");
+                    response = "\"" + arr[0] + arr[2] + "\"";
+                    break;
+                case "-":
+                    arr[2] = arr[2].replace("\"", "");
+                    response = arr[0].replace(arr[2], " ");
+                    break;
+            }
 
-        int a;
-        int b;
-
-
-        if (checkRom(arr[0]) && checkRom(arr[2])) {
-            a = checkNum(toArabic(arr[0]));
-            b = checkNum(toArabic(arr[2]));
-            roman = true;
         } else {
-            a = checkNum(Integer.parseInt(arr[0]));
-            b = checkNum(Integer.parseInt(arr[2]));
-        }
+            int x = Integer.parseInt(arr[2]);
+            checkNum(x);
+            switch (arr[1]) {
+                case "*":
+                    arr[0] = (arr[0].replace("\"", ""));
+                    response = "\"" + arr[0].repeat(x) + "\"";
+                    break;
+                case "/":
+                    arr[0] = arr[0].replace("\"", "");
+                    response = "\"" + new String(arr[0].toCharArray(), 0, arr[0].length() / x) + "\"";
+                    break;
 
 
-        switch (arr[1]) {
-            case "+":
-                response = a + b;
-                break;
-            case "-":
-                response = a - b;
-                break;
-            case "/":
-                response = a / b;
-                break;
-            case "*":
-                response = a * b;
-                break;
-            default:
-                new Exception();
-        }
-        if (roman) {
-            return toRoman(response);
-        } else {
-            return String.valueOf(response);
-        }
-    }
-
-    static boolean checkRom(String str) {
-        String[] arr = new String[]{"I", "V", "X"};
-        for (int i = 0; i < arr.length; i++) {
-            if (str.contains(arr[i])) {
-                return true;
             }
         }
-        return false;
+
+        if (parseInt(String.valueOf(response.length())) > 40) {
+            int limit = 40;
+            String b = response.codePointCount(0, response.length()) > limit ?
+                    response.substring(0, response.offsetByCodePoints(0, limit)) : response;
+            response = b + "...";
+
+
+        }
+        return response;
+
     }
 
-    static int checkNum(int num) throws Exception {
-        if (num >= -10 && num <= 10) {
-            return num;
-        } else {
+
+    public static void checkNum(int x) throws Exception {
+        if (x > 10) {
             throw new Exception();
         }
-
     }
 
-    static int findFloor(final int number, final int firstIndex, final int lastIndex) {
-        if (firstIndex == lastIndex)
-            return firstIndex;
-        if (intervals[firstIndex] == number)
-            return firstIndex;
-        if (intervals[lastIndex] == number)
-            return lastIndex;
-        final int median = (lastIndex + firstIndex) / 2;
-        if (median == firstIndex)
-            return firstIndex;
-        if (number == intervals[median])
-            return median;
-        if (number > intervals[median])
-            return findFloor(number, median, lastIndex);
-        else
-            return findFloor(number, firstIndex, median);
+    public static void checkStr(String x) throws Exception {
+        if (x.length() >= 12) {
 
-    }
+            throw new Exception();
 
-    static String toRoman(final int number) {
-        int floorIndex = findFloor(number, 0, intervals.length - 1);
-        if (number == intervals[floorIndex])
-            return numerals[floorIndex];
-        return numerals[floorIndex] + toRoman(number - intervals[floorIndex]);
-    }
 
-    static int toArabic(String roman) {
-        int result = 0;
-        for (int i = intervals.length - 1; i >= 0; i--) {
-            while (roman.indexOf(numerals[i]) == 0 && numerals[i].length() > 0) {
-                result += intervals[i];
-                roman = roman.substring(numerals[i].length());
-            }
         }
-        return result;
+
+
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
